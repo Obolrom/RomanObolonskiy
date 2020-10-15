@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">RomanObolonskiy</string>
+    <string name="edit_text_view_hint">enter your message</string>
+</resources>

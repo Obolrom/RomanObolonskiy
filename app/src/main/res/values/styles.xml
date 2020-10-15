@@ -12,11 +12,21 @@
     </style>
     
     <style name="edit_view_template">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="background">@color/view_background_color</item>
         <item name="android:hint">@string/edit_text_view_hint</item>
         <item name="android:textSize">20sp</item>
         <item name="android:inputType">text</item>
         <item name="android:layout_margin">10dp</item>
+    </style>
+
+    <style name="button_template">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="background">@color/view_background_color</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:text">@string/button</item>
     </style>
     
 </resources>

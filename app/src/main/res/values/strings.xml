@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">RomanObolonskiy</string>
-    <string name="edit_text_view_hint">enter your message</string>
+    <string name="edit_text_view_hint">Enter your message</string>
+    <string name="button">to other activity</string>
+    <string name="default_text_view_message">default</string>
 </resources>

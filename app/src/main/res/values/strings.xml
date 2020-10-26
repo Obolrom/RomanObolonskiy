@@ -3,4 +3,8 @@
     <string name="edit_text_view_hint">Enter your message</string>
     <string name="button">to other activity</string>
     <string name="default_text_view_message">default</string>
+    <string name="completed">completed</string>
+    <string name="add_project">+ add project</string>
+    <string name="add_task">+ add task</string>
+    <string name="pomodoro_text">25</string>
 </resources>

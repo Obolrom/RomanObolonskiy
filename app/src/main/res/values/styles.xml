@@ -32,5 +32,26 @@
         <item name="android:layout_marginRight">10dp</item>
         <item name="android:text">@string/button</item>
     </style>
+
+    <style name="add_task_text_view_template">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="background">@color/view_background_color</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="numbers_add_task_view" parent="add_task_text_view_template">
+        <item name="android:textSize">28sp</item>
+        <item name="android:text">0</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">#F00000</item>
+    </style>
+    
+    <style name="text_below_add_task_view" parent="add_task_text_view_template">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:color">#404040</item>
+    </style>
     
 </resources>

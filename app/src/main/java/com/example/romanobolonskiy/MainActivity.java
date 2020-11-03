@@ -39,9 +39,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText field2;
     private TextView expression;
 
-    final int WHAT_OK = 100;
-    final int WHAT_DIVISION_BY_ZERO = -100;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +58,8 @@ public class MainActivity extends AppCompatActivity {
                 if (fieldChecker()) {
                     Toast.makeText(MainActivity.this, "all fields should be filled", Toast.LENGTH_SHORT).show();
                 } else {
-                    CalculusThread thread = new CalculusThread(field1.getText(), field2.getText(), Operations.Plus);
+                    CalculusThread thread = new CalculusThread(
+                            new OperPlus(handler, field1.getText(), field2.getText()));
                     thread.start();
                 }
             }
@@ -73,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
                 if (fieldChecker()) {
                     Toast.makeText(MainActivity.this, "all fields should be filled", Toast.LENGTH_SHORT).show();
                 } else {
-                    CalculusThread thread = new CalculusThread(field1.getText(), field2.getText(), Operations.Minus);
+                    CalculusThread thread = new CalculusThread(
+                            new OperMinus(handler, field1.getText(), field2.getText()));
                     thread.start();
                 }
             }
@@ -85,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
                 if (fieldChecker()) {
                     Toast.makeText(MainActivity.this, "all fields should be filled", Toast.LENGTH_SHORT).show();
                 } else {
-                    CalculusThread thread = new CalculusThread(field1.getText(), field2.getText(), Operations.Multiply);
+                    CalculusThread thread = new CalculusThread(
+                            new OperMultiply(handler, field1.getText(), field2.getText()));
                     thread.start();
                 }
             }
@@ -97,7 +97,8 @@ public class MainActivity extends AppCompatActivity {
                 if (fieldChecker()) {
                     Toast.makeText(MainActivity.this, "all fields should be filled", Toast.LENGTH_SHORT).show();
                 } else {
-                    CalculusThread thread = new CalculusThread(field1.getText(), field2.getText(), Operations.Devise);
+                    CalculusThread thread = new CalculusThread(
+                            new OperDevise(handler, field1.getText(), field2.getText()));
                     thread.start();
                 }
             }
@@ -113,51 +114,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class CalculusThread extends Thread {
-        Editable numberStr1;
-        Editable numberStr2;
-        Operations operation;
+        Calculable calculable;
 
-        public CalculusThread(Editable numberStr1, Editable numberStr2, Operations operation) {
-            this.numberStr1 = numberStr1;
-            this.numberStr2 = numberStr2;
-            this.operation = operation;
+        public CalculusThread(Calculable calculable) {
+            this.calculable = calculable;
         }
 
         @Override
         public void run() {
-            Message message = handler.obtainMessage();
-            String result = "";
-            String number2 = numberStr2.toString().trim();
-            String number1 = numberStr1.toString().trim();
-            Double resNumber;
-
-            switch (operation) {
-                case Devise:
-                    if (number2.equals("0")) {
-                        result = "division by 0";
-                        message = handler.obtainMessage(WHAT_DIVISION_BY_ZERO, result);
-                    } else {
-                        resNumber = Double.parseDouble(number1) / Double.parseDouble(number2);
-                        result = numberStr1 + " + " + numberStr2 + " = " + resNumber.toString();
-                        message = handler.obtainMessage(WHAT_OK, result);
-                    }
-                    break;
-                case Multiply:
-                    resNumber = Double.parseDouble(number1) * Double.parseDouble(number2);
-                    result = number1 + " + " + number2 + " = " + resNumber.toString();
-                    message = handler.obtainMessage(WHAT_OK, result);
-                    break;
-                case Plus:
-                    resNumber = Double.parseDouble(number1) + Double.parseDouble(number2);
-                    result = number1 + " + " + number2 + " = " + resNumber.toString();
-                    message = handler.obtainMessage(WHAT_OK, result);
-                    break;
-                case Minus:
-                    resNumber = Double.parseDouble(number1) - Double.parseDouble(number2);
-                    result = number1 + " + " + number2 + " = " + resNumber.toString();
-                    message = handler.obtainMessage(WHAT_OK, result);
-                    break;
-            }
+            Message message = calculable.getMessage();
             handler.sendMessage(message);
         }
     }

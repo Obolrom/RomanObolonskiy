@@ -1,33 +1,18 @@
 package com.example.romanobolonskiy;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Path;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
-import java.util.TreeMap;
-import java.util.concurrent.TimeUnit;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements WhatCodes {
 
     private Handler handler;
 
@@ -58,9 +43,21 @@ public class MainActivity extends AppCompatActivity {
                 if (fieldChecker()) {
                     Toast.makeText(MainActivity.this, "all fields should be filled", Toast.LENGTH_SHORT).show();
                 } else {
-                    CalculusThread thread = new CalculusThread(
-                            new OperPlus(handler, field1.getText(), field2.getText()));
-                    thread.start();
+                    Calculable performer = new OperationPerformer(new OperationPerformer.CalculableCall() {
+                        @Override
+                        public Message callbackMessage(String number1, String number2) {
+                            Message message;
+                            String result = "";
+                            Double resNumber;
+
+                            resNumber = Double.parseDouble(number1) + Double.parseDouble(number2);
+                            result = number1 + " + " + number2 + " = " + resNumber.toString();
+                            message = handler.obtainMessage(WHAT_OK, result);
+
+                            return message;
+                        }
+                    }, field1.getText(), field2.getText());
+                    new CalculusThread(performer).start();
                 }
             }
         });
@@ -71,9 +68,21 @@ public class MainActivity extends AppCompatActivity {
                 if (fieldChecker()) {
                     Toast.makeText(MainActivity.this, "all fields should be filled", Toast.LENGTH_SHORT).show();
                 } else {
-                    CalculusThread thread = new CalculusThread(
-                            new OperMinus(handler, field1.getText(), field2.getText()));
-                    thread.start();
+                    Calculable performer = new OperationPerformer(new OperationPerformer.CalculableCall() {
+                        @Override
+                        public Message callbackMessage(String number1, String number2) {
+                            Message message;
+                            String result = "";
+                            Double resNumber;
+
+                            resNumber = Double.parseDouble(number1) - Double.parseDouble(number2);
+                            result = number1 + " - " + number2 + " = " + resNumber.toString();
+                            message = handler.obtainMessage(WHAT_OK, result);
+
+                            return message;
+                        }
+                    }, field1.getText(), field2.getText());
+                    new CalculusThread(performer).start();
                 }
             }
         });
@@ -84,9 +93,21 @@ public class MainActivity extends AppCompatActivity {
                 if (fieldChecker()) {
                     Toast.makeText(MainActivity.this, "all fields should be filled", Toast.LENGTH_SHORT).show();
                 } else {
-                    CalculusThread thread = new CalculusThread(
-                            new OperMultiply(handler, field1.getText(), field2.getText()));
-                    thread.start();
+                    Calculable calculable = new OperationPerformer(new OperationPerformer.CalculableCall() {
+                        @Override
+                        public Message callbackMessage(String number1, String number2) {
+                            Message message;
+                            String result = "";
+                            Double resNumber;
+
+                            resNumber = Double.parseDouble(number1) * Double.parseDouble(number2);
+                            result = number1 + " * " + number2 + " = " + resNumber.toString();
+                            message = handler.obtainMessage(WHAT_OK, result);
+
+                            return message;
+                        }
+                    }, field1.getText(), field2.getText());
+                    new CalculusThread(calculable).start();
                 }
             }
         });
@@ -97,9 +118,25 @@ public class MainActivity extends AppCompatActivity {
                 if (fieldChecker()) {
                     Toast.makeText(MainActivity.this, "all fields should be filled", Toast.LENGTH_SHORT).show();
                 } else {
-                    CalculusThread thread = new CalculusThread(
-                            new OperDevise(handler, field1.getText(), field2.getText()));
-                    thread.start();
+                    Calculable performer = new OperationPerformer(new OperationPerformer.CalculableCall() {
+                        @Override
+                        public Message callbackMessage(String number1, String number2) {
+                            Message message;
+                            String result = "";
+                            Double resNumber;
+
+                            if (number2.equals("0")) {
+                                result = "division by 0";
+                                message = handler.obtainMessage(WHAT_DIVISION_BY_ZERO, result);
+                            } else {
+                                resNumber = Double.parseDouble(number1) / Double.parseDouble(number2);
+                                result = number1 + " / " + number2 + " = " + resNumber.toString();
+                                message = handler.obtainMessage(WHAT_OK, result);
+                            }
+                            return message;
+                        }
+                    }, field1.getText(), field2.getText());
+                    new CalculusThread(performer).start();
                 }
             }
         });
@@ -114,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class CalculusThread extends Thread {
-        Calculable calculable;
+        private Calculable calculable;
 
         public CalculusThread(Calculable calculable) {
             this.calculable = calculable;
